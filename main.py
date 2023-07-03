@@ -14,7 +14,7 @@ def redownload_data():
     alphabet = string.ascii_lowercase
     total_letters = len(alphabet)
 
-    with tqdm(total=total_letters, desc="Progress", unit="letter") as pbar:
+    with tqdm(total=total_letters, desc="Progress", unit="letter") as progress_bar:
         for letter in alphabet:
             req = requests.get(DICTIONARY_URL + letter)
             soup = BeautifulSoup(req.text, "html.parser")
@@ -26,13 +26,14 @@ def redownload_data():
                 word = item.find('a').text.split(',')[0].strip()
                 word_set.add(word)
 
-            latin_words[letter] = list(word_set)
-            pbar.update(1)
+            latin_words[letter] = word_set
+            progress_bar.update(1)
 
     if not os.path.exists('data'):
         os.makedirs('data')
 
-    for letter, word_list in latin_words.items():
+    for letter, word_set in latin_words.items():
+        word_list = sorted(list(word_set), key=str.lower)
         data = {
             'letter': letter,
             'words': word_list
