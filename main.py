@@ -39,7 +39,7 @@ def redownload_data():
         }
         filename = f'data/{letter}.json'
         with open(filename, 'w') as file:
-            json.dump(data, file)
+            json.dump(data, file, indent=2)
 
     print("Data redownloaded successfully!")
 
